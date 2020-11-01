@@ -16,7 +16,7 @@ const LogSchema = new mongoose.Schema({
         trim: true,
         required: [true, 'User is requireds']
     },
-    date: {
+    created: {
         type: Date,
         default: Date.now
     }

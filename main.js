@@ -1,6 +1,6 @@
 const path = require('path')
 const url = require('url')
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, ipcRenderer } = require('electron')
 const Log = require('./models/Log')
 
 const connectDB = require('./config/db')
@@ -82,6 +82,15 @@ async function sendLogs(){
 		console.log(err)
 	}
 }
+
+ipcMain.on('logs:add', async (e, item)=>{
+	try {
+		await Log.create(item)
+		sendLogs()
+	} catch (error) {
+		console.log(error)
+	}
+})
 
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {
