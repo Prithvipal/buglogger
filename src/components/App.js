@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
+import {ipcMain, ipcRenderer} from 'electron'
 import Container from 'react-bootstrap/Container'
 import Table from 'react-bootstrap/Table'
 import Alert from 'react-bootstrap/Alert'
@@ -7,29 +8,7 @@ import AddLogItem from './AddLogItem'
 
 
 const App = () => {
-	const [logs, setLogs] = useState([
-		{
-			_id: 1,
-			text: 'This is log one',
-			priority: 'low',
-			user: 'Parth',
-			created: new Date().toString()
-		},
-		{
-			_id: 2,
-			text: 'This is log two',
-			priority: 'moderate',
-			user: 'Prithvi',
-			created: new Date().toString()
-		},
-		{
-			_id: 3,
-			text: 'This is log three',
-			priority: 'high',
-			user: 'Rajani',
-			created: new Date().toString()
-		}
-	])
+	const [logs, setLogs] = useState([])
 
 	const [alert, setAlert] = useState({
 		show: false,
@@ -37,6 +16,12 @@ const App = () => {
 		variant: 'success'
 	}) 
 
+	useEffect(() =>{
+		ipcRenderer.send("logs:load")
+		ipcRenderer.on('logs:get', (e, logs) =>{
+			setLogs(JSON.parse(logs))
+		})
+	}, [] )
 	function addItem(item){
 		if (item.text === '' || item.user === '' || item.priority ===''){
 			showAlert('Please enter all fields', 'danger')
