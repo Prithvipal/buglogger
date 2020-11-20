@@ -21,7 +21,14 @@ const App = () => {
 		ipcRenderer.on('logs:get', (e, logs) =>{
 			setLogs(JSON.parse(logs))
 		})
+
+		ipcRenderer.on('logs:clear', ()=>{
+			setLogs([])
+			showAlert('Logs cleared')
+		})
+
 	}, [] )
+
 	function addItem(item){
 		if (item.text === '' || item.user === '' || item.priority ===''){
 			showAlert('Please enter all fields', 'danger')
